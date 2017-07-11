@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <catch.hpp>
 #include <iostream>
 #include <msgpack/package.hpp>
 #include <msgpack/util.hpp>

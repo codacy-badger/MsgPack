@@ -40,7 +40,7 @@ static constants const& get_constants() {
 package::package() noexcept : ptr_(get_constants().nil) {}
 package::package(std::nullptr_t) noexcept : ptr_(get_constants().nil) {}
 
-package::package(bool value) : ptr_(make_shared<value_boolean>()) {}
+package::package(bool value) : ptr_(make_shared<value_boolean>(value)) {}
 
 package::package(const string &value) :
         ptr_(make_shared<value_string>(value)) {}

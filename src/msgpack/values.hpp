@@ -24,7 +24,7 @@ public:
 // -----------------------------------------------------------------------------
 class value_boolean final : public value_base<type::BOOLEAN, bool> {
 public:
-    explicit value_boolean() : value_base({}) {}
+    explicit value_boolean(bool value) : value_base(value) {}
     enum format format() const override {
         return value_ ? format::TRUE : format::FALSE;
     }

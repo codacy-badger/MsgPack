@@ -36,6 +36,9 @@ TEST_CASE("Pack/unpack boolean", "[pack/unpack]") {
     REQUIRE(f.format() == msgpack::format::FALSE);
     REQUIRE(t.format() == msgpack::format::TRUE);
 
+    REQUIRE(f != t);
+    REQUIRE(t > f);
+
     vector<uint8_t> raw_msgpack;
     f.pack(raw_msgpack);
     REQUIRE(raw_msgpack.size() == 1);

@@ -104,3 +104,27 @@ TEST_CASE("Check fixed string", "[pack/unpack]") {
         REQUIRE(package.format() == msgpack::format::STR8);
     }
 }
+
+TEST_CASE("Check fixed map", "[pack/unpack]") {
+    const vector<uint8_t> expected { 0x82, 0xa7, 0x63, 0x6f, 0x6d, 0x70,
+                                     0x61, 0x63, 0x74, 0xc3, 0xa6, 0x73,
+                                     0x63, 0x68, 0x65, 0x6d, 0x61, 0x00 };
+    msgpack::package::map map {
+            {"compact", true },
+            //FIXME: should not require explicit casting
+            {"schema", static_cast<uint8_t >(0) }
+    };
+
+    vector<uint8_t> raw_msgpack;
+    msgpack::package package { map };
+
+    package.pack(raw_msgpack);
+    REQUIRE(raw_msgpack == expected);
+
+    error_code ec;
+    auto unpacked = msgpack::unpacker::unpack(expected, ec);
+    REQUIRE(unpacked.type() == msgpack::type::MAP);
+    REQUIRE(unpacked.format() == msgpack::format::FIXMAP);
+
+    REQUIRE(package == unpacked);
+}

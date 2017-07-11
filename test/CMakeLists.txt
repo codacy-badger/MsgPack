@@ -5,7 +5,7 @@ set(MSGPACK_UNITTEST_TARGET_NAME "msgpack_unit")
 
 add_executable(${MSGPACK_UNITTEST_TARGET_NAME}
                 $<TARGET_OBJECTS:catch_main>
-                src/unit-pack-unpack.cpp
+                src/unit-pack-and-unpack.cpp
                 src/unit-package-integer.cpp
                 src/unit-unpacker-incompete.cpp)
 target_include_directories(${MSGPACK_UNITTEST_TARGET_NAME} PRIVATE "third_party")

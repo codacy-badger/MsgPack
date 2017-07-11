@@ -64,8 +64,7 @@ inline void pack(int64_t value, std::vector<uint8_t> &out) {
 }
 
 inline void pack(uint8_t value, std::vector<uint8_t> &out) {
-    if(128 <= value)
-    {
+    if(128 <= value) {
         out.push_back(0xcc);
     }
     out.push_back(value);

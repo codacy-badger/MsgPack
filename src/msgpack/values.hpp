@@ -136,22 +136,35 @@ protected:
 template <typename T,
         class = typename std::enable_if<std::is_integral<T>::value>::type>
 format integer_format(T i) {
-    if (i >= 0 && i <= 127) return format::POSITIVE_FIXINT;
-
-    if (std::is_signed<T>::value) {
-        if (i >= -32 && i <= -1) return format::NEGATIVE_FIXINT;
+    if (i >= 0) {
+        if (i < 128) {
+            return format::POSITIVE_FIXINT;
+        } else if (i <= std::numeric_limits<uint8_t>::max()) {
+            return format::UINT8;
+        } else if (i <= std::numeric_limits<uint16_t>::max()) {
+            return format::UINT16;
+        } else if (i <= std::numeric_limits<uint32_t>::max()) {
+            return format::UINT32;
+        } else if (i <= std::numeric_limits<uint64_t>::max()) {
+            return format::UINT64;
+        }
+    } else {
+        if (i >= -32) {
+            return format::NEGATIVE_FIXINT;
+        } else if (i >= std::numeric_limits<int8_t>::min() and
+                   i <= std::numeric_limits<int8_t>::max()) {
+            return format::INT8;
+        } else if (i >= std::numeric_limits<int16_t>::min() and
+                   i <= std::numeric_limits<int16_t>::max()) {
+            return format::INT16;
+        } else if (i >= std::numeric_limits<int32_t>::min() and
+                   i <= std::numeric_limits<int32_t>::max()) {
+            return format::INT32;
+        } else if (i >= std::numeric_limits<int64_t>::min() and
+                   i <= std::numeric_limits<int64_t>::max()) {
+            return format::INT64;
+        }
     }
-
-    if (std::is_same<T, int8_t>::value) return format::INT8;
-    if (std::is_same<T, int16_t>::value) return format::INT16;
-    if (std::is_same<T, int32_t>::value) return format::INT32;
-    if (std::is_same<T, int64_t>::value) return format::INT64;
-
-    if (std::is_same<T, uint8_t>::value) return format::UINT8;
-    if (std::is_same<T, uint16_t>::value) return format::UINT16;
-    if (std::is_same<T, uint32_t>::value) return format::UINT32;
-    if (std::is_same<T, uint64_t>::value) return format::UINT64;
-
 
     return format::UNDEFINED;
 }

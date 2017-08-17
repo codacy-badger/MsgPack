@@ -1,6 +1,14 @@
 #ifndef TARIGO_MSGPACK_FORMAT_HPP
 #define TARIGO_MSGPACK_FORMAT_HPP
 
+#ifdef TRUE
+#undef TRUE
+#endif
+
+#ifdef FALSE
+#undef FALSE
+#endif
+
 namespace tarigo {
 namespace msgpack {
 

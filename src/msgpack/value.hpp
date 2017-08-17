@@ -8,6 +8,10 @@
 
 #include <msgpack/package.hpp>
 
+#ifdef nil
+#undef nil
+#endif
+
 namespace tarigo {
 namespace msgpack {
 

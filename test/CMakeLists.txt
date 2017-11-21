@@ -1,26 +1,35 @@
 add_library(catch_main OBJECT "src/unit.cpp")
 target_include_directories(catch_main PRIVATE "third_party")
 
-set(MSGPACK_UNITTEST_TARGET_NAME "msgpack_unit")
+find_package(Threads)
 
-add_executable(${MSGPACK_UNITTEST_TARGET_NAME}
-                $<TARGET_OBJECTS:catch_main>
-                src/unit-pack-and-unpack.cpp
-                src/unit-package-integer.cpp
-                src/unit-unpacker-incompete.cpp)
-target_include_directories(${MSGPACK_UNITTEST_TARGET_NAME} PRIVATE "third_party")
+#############################################################################
+# one executable for each unit test file
+#############################################################################
 
-set_target_properties(${MSGPACK_UNITTEST_TARGET_NAME} PROPERTIES
-    CXX_STANDARD 11
-    CXX_STANDARD_REQUIRED ON
-)
+file(GLOB files "src/unit-*.cpp")
+foreach(file ${files})
+    get_filename_component(file_basename ${file} NAME_WE)
+    string(REGEX REPLACE "unit-([^$]+)" "test-\\1" testcase ${file_basename})
 
-add_test(NAME "${MSGPACK_UNITTEST_TARGET_NAME}_default"
-    COMMAND ${MSGPACK_UNITTEST_TARGET_NAME}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+    add_executable(${testcase} $<TARGET_OBJECTS:catch_main> ${file})
 
-add_test(NAME "${MSGPACK_UNITTEST_TARGET_NAME}_all"
-    COMMAND ${MSGPACK_UNITTEST_TARGET_NAME} "*"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+    set_target_properties(${testcase} PROPERTIES
+                          CXX_STANDARD 17
+                          CXX_STANDARD_REQUIRED ON)
+
+    target_include_directories(${testcase} PRIVATE "third_party")
+    target_link_libraries(${testcase} mbedtls ${CMAKE_THREAD_LIBS_INIT})
+
+    add_test(NAME "${testcase}_default"
+      COMMAND ${testcase} ${CATCH_TEST_FILTER}
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+    set_tests_properties("${testcase}_default" PROPERTIES LABELS "default")
+
+    add_test(NAME "${testcase}_all"
+      COMMAND ${testcase} ${CATCH_TEST_FILTER} "*"
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+    set_tests_properties("${testcase}_all" PROPERTIES LABELS "all")
+endforeach()

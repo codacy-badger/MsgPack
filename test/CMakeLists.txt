@@ -19,7 +19,7 @@ foreach(file ${files})
                           CXX_STANDARD_REQUIRED ON)
 
     target_include_directories(${testcase} PRIVATE "third_party")
-    target_link_libraries(${testcase} mbedtls ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(${testcase} ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME "${testcase}_default"
       COMMAND ${testcase} ${CATCH_TEST_FILTER}

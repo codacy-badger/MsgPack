@@ -1,11 +1,10 @@
-#pragma once
 #ifndef TARIGO_MSGPACK_VALUES_HPP
 #define TARIGO_MSGPACK_VALUES_HPP
 
 #include <string>
 #include <memory>
 
-#include <msgpack/value_base.hpp>
+#include "msgpack/value_base.hpp"
 
 namespace tarigo {
 namespace msgpack {

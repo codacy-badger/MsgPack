@@ -1,6 +1,5 @@
-#pragma once
-#ifndef TARIGO_MSGPACK_MSGPACK_H
-#define TARIGO_MSGPACK_MSGPACK_H
+#ifndef TARIGO_MSGPACK_MSGPACK_HPP
+#define TARIGO_MSGPACK_MSGPACK_HPPs
 
 #include "msgpack/type.hpp"
 #include "msgpack/format.hpp"

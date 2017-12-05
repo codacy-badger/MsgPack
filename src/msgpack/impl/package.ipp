@@ -1,4 +1,3 @@
-#pragma once
 #ifndef TARIGO_MSGPACK_PACKAGE_IPP
 #define TARIGO_MSGPACK_PACKAGE_IPP
 

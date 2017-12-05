@@ -1,4 +1,3 @@
-#pragma once
 #ifndef TARIGO_MSGPACK_VALUE_HPP
 #define TARIGO_MSGPACK_VALUE_HPP
 

@@ -1,5 +1,5 @@
 #ifndef TARIGO_MSGPACK_MSGPACK_HPP
-#define TARIGO_MSGPACK_MSGPACK_HPPs
+#define TARIGO_MSGPACK_MSGPACK_HPP
 
 #include "msgpack/type.hpp"
 #include "msgpack/format.hpp"

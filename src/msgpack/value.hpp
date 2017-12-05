@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-#include <msgpack/package.hpp>
+#include "msgpack/package.hpp"
 
 #ifdef nil
 #undef nil

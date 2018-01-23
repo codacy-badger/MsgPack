@@ -133,10 +133,21 @@ package package::unpack(vector<uint8_t> const& in, std::error_code &ec) {
 }
 
 std::vector<package> package::unpack_sequence (std::vector<uint8_t> const& in,
+                                               size_t &successfully_parsed,
                                                size_t &stopped_at_position,
                                                std::error_code &ec) {
-    return unpacker::unpack_sequence(in, stopped_at_position, ec);
+    return unpacker::unpack_sequence(in, successfully_parsed,
+                                     stopped_at_position, ec);
 }
+
+std::vector<package> package::unpack_sequence (std::vector<uint8_t> const& in,
+                                               size_t &stopped_at_position,
+                                               std::error_code &ec) {
+    size_t successfully_parsed;
+    return unpacker::unpack_sequence(in, successfully_parsed,
+                                     stopped_at_position, ec);
+}
+
 
 } // namespace msgpack
 } // namespace tarigo

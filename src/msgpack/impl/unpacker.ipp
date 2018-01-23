@@ -317,15 +317,19 @@ inline package unpack(vector <uint8_t> const &in, std::error_code &ec) {
 }
 
 inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
+                                             size_t &successfully_parsed,
                                              size_t &stopped_at_position,
                                              std::error_code &ec) {
     unpacker_ctx context { in, 0 };
     stopped_at_position = 0;
+    successfully_parsed = 0;
     std::vector<package> packages;
+
     do  {
         auto pkg = context.unpack();
         if (!context.ec) {
             packages.push_back(pkg);
+            successfully_parsed = context.position;
         }
     } while (context.position != in.size() && !context.ec);
 
@@ -334,6 +338,14 @@ inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
 
     return packages;
 }
+
+inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
+                                             size_t &stopped_at_position,
+                                             std::error_code &ec) {
+    size_t successfully_parsed;
+    return unpack_sequence(in, successfully_parsed, stopped_at_position, ec);
+}
+
 
 } //namespace unpacker
 } //namespace msgpack

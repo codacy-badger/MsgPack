@@ -11,5 +11,6 @@
 #include "msgpack/unpacker.hpp"
 #include "msgpack/error.hpp"
 #include "msgpack/util.hpp"
+#include "msgpack/streambuf.hpp"
 
-#endif //MSGP_MSGPACK_H
+#endif

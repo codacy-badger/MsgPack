@@ -128,6 +128,15 @@ bool package::operator< (const package &other) const {
 
 // Unpacking.
 // -----------------------------------------------------------------------------
+std::vector<package> package::unpack_sequence (const uint8_t *in,
+                                               std::size_t in_size,
+                                               size_t &successfully_parsed,
+                                               size_t &stopped_at_position,
+                                               std::error_code &ec) {
+    return unpacker::unpack_sequence(in, in_size, successfully_parsed,
+                                     stopped_at_position, ec);
+}
+
 package package::unpack(vector<uint8_t> const& in, std::error_code &ec) {
     return unpacker::unpack(in, ec);
 }
@@ -136,7 +145,7 @@ std::vector<package> package::unpack_sequence (std::vector<uint8_t> const& in,
                                                size_t &successfully_parsed,
                                                size_t &stopped_at_position,
                                                std::error_code &ec) {
-    return unpacker::unpack_sequence(in, successfully_parsed,
+    return unpacker::unpack_sequence(in.data(), in.size(), successfully_parsed,
                                      stopped_at_position, ec);
 }
 
@@ -144,7 +153,7 @@ std::vector<package> package::unpack_sequence (std::vector<uint8_t> const& in,
                                                size_t &stopped_at_position,
                                                std::error_code &ec) {
     size_t successfully_parsed;
-    return unpacker::unpack_sequence(in, successfully_parsed,
+    return unpacker::unpack_sequence(in.data(), in.size(), successfully_parsed,
                                      stopped_at_position, ec);
 }
 

@@ -132,6 +132,12 @@ public:
     package unpack(std::vector<uint8_t> const &in, std::error_code &ec);
 
     inline static
+    std::vector<package> unpack_sequence(const uint8_t *in,
+                                         std::size_t in_size,
+                                         size_t &successfully_parsed,
+                                         size_t &stopped_at_position,
+                                         std::error_code &ec);
+    inline static
     std::vector<package> unpack_sequence(std::vector<uint8_t> const &in,
                                          size_t &stopped_at_position,
                                          std::error_code &ec);

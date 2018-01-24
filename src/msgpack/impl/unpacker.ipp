@@ -14,37 +14,37 @@ namespace unpacker {
 using std::vector;
 
 struct unpacker_ctx final {
-    vector<uint8_t> buffer;
+    const uint8_t *buffer_ptr;
+    const std::size_t buffer_size;
     size_t position;
     std::error_code ec;
 
-    unpacker_ctx(vector<uint8_t> const& buffer, size_t position) {
-        this->buffer = buffer;
-        this->position = position;
+    unpacker_ctx(const uint8_t *buff_ptr, size_t buff_size, size_t pos) :
+            buffer_ptr(buff_ptr), buffer_size(buff_size), position(pos) {
     }
 
     size_t buffer_bytes_left() {
-        return (buffer.size() - position);
+        return (buffer_size - position);
     }
 
     uint8_t get_first_byte() {
-        if(buffer.size() <= position) {
+        if(buffer_size <= position) {
             ec = make_error_code(errc::unexpected_end_of_input);
             return 0xc1;
         }
-        const uint8_t first_byte = buffer[position];
+        const uint8_t first_byte = buffer_ptr[position];
         ++position;
         return first_byte;
     }
 
     template< typename T> T unpack_number() {
-        if(buffer.size() <= position) {
+        if(buffer_size <= position) {
             ec = make_error_code(errc::unexpected_end_of_input);
             return T(0);
         }
         packer::converter<T> converter;
         for( size_t j = 0; j < sizeof(T); ++j ) {
-            converter.value.bytes[j] = buffer[position];
+            converter.value.bytes[j] = buffer_ptr[position];
             ++position;
         }
         std::reverse(converter.value.bytes.begin(), converter.value.bytes.end());
@@ -105,7 +105,7 @@ struct unpacker_ctx final {
             ec = make_error_code(errc::unexpected_end_of_input);
             return std::string();
         }
-        std::string res(&(buffer[position]), &(buffer[position+bytes]));
+        std::string res(&(buffer_ptr[position]), &(buffer_ptr[position+bytes]));
         position += bytes;
         return res;
     }
@@ -123,7 +123,7 @@ struct unpacker_ctx final {
     package::binary unpack_binary_impl(T bytes) {
         package::binary res;
         for(T j = 0; j < bytes; ++j) {
-            res.push_back(buffer[position]);
+            res.push_back(buffer_ptr[position]);
             position++;
         }
         return res;
@@ -310,17 +310,18 @@ struct unpacker_ctx final {
 };
 
 inline package unpack(vector <uint8_t> const &in, std::error_code &ec) {
-    unpacker_ctx context { in, 0 };
+    unpacker_ctx context { in.data(), in.size(), 0 };
     auto result = context.unpack();
     ec = context.ec;
     return result;
 }
 
-inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
+inline std::vector<package> unpack_sequence (const uint8_t *in,
+                                             std::size_t in_size,
                                              size_t &successfully_parsed,
                                              size_t &stopped_at_position,
                                              std::error_code &ec) {
-    unpacker_ctx context { in, 0 };
+    unpacker_ctx context { in, in_size, 0 };
     stopped_at_position = 0;
     successfully_parsed = 0;
     std::vector<package> packages;
@@ -331,7 +332,7 @@ inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
             packages.push_back(pkg);
             successfully_parsed = context.position;
         }
-    } while (context.position != in.size() && !context.ec);
+    } while (context.position != in_size && !context.ec);
 
     stopped_at_position = context.position;
     ec = context.ec;
@@ -343,7 +344,8 @@ inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
                                              size_t &stopped_at_position,
                                              std::error_code &ec) {
     size_t successfully_parsed;
-    return unpack_sequence(in, successfully_parsed, stopped_at_position, ec);
+    return unpack_sequence(in.data(), in.size(),
+                           successfully_parsed, stopped_at_position, ec);
 }
 
 

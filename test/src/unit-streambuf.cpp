@@ -1,5 +1,4 @@
 #include <catch.hpp>
-
 #include "msgpack/msgpack.hpp"
 
 using namespace tarigo;
@@ -73,4 +72,12 @@ TEST_CASE("Consume complete string and incomplete buffer sequentially", "[stream
     REQUIRE(packages[1].is_type_array());
     REQUIRE(packages[1].array_items()[0].is_type_integer());
     REQUIRE(packages[1].array_items()[0].int32_value() == 3);
+}
+
+TEST_CASE("Produce string", "[streambuf]") {
+    std::vector<msgpack::package> packages = { msgpack::package("Hello!") };
+    std::error_code error;
+    msgpack::streambuf streambuf;
+    std::basic_ostream<uint8_t> out(&streambuf);
+    REQUIRE(streambuf.produce_msgpack(packages, error) == 7);
 }

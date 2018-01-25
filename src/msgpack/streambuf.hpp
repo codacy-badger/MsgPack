@@ -84,9 +84,13 @@ public:
         return result.size();
     }
 
-    std::size_t produce_msgpack(const std::vector<package> packages,
-                                std::error_code error) {
-        throw std::runtime_error("not implemented");
+    std::size_t produce_msgpack(const std::vector<package> &packages,
+                                std::error_code &error) {
+
+        std::vector<uint8_t> out;
+        for (auto package : packages) package.pack(out);
+        std::move(std::begin(out), std::end(out), std::back_inserter(buffer_));
+        return out.size();
     }
 
 protected:

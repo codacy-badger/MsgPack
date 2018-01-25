@@ -2,14 +2,14 @@
 #define TARIGO_MSGPACK_STREAMBUF_HPP
 
 #include <cstdint>
+#include <cstring>
 #include <system_error>
 #include <streambuf>
 #include <vector>
 #include <limits>
+#include <stdexcept>
 
 #include "msgpack/package.hpp"
-
-#include <iostream>
 
 namespace tarigo::msgpack {
 
@@ -44,49 +44,49 @@ public:
         setg(eback(), gptr(), pptr());
     }
 
-    /// Remove characters from the input sequence.
-    void consume(std::size_t n) {
-        if (egptr() < pptr())
-            setg(&buffer_[0], gptr(), pptr());
-        if (gptr() + n > pptr())
-            n = pptr() - gptr();
-        gbump(static_cast<int>(n));
-    }
-
-
-    std::size_t consume_packages(std::vector<package> &packages,
+    std::size_t consume_msgpack(std::vector<package> &packages,
                                  std::error_code &error) {
         size_t successfully_parsed = 0, stopped_at_position = 0;
-        std::error_code ec;
+        std::error_code unpack_error;
         auto result = package::unpack_sequence(pbase(), size(),
-                                                successfully_parsed,
-                                                stopped_at_position,
-                                                ec);
-
-        if (successfully_parsed == 0) return result.size();
-
-        if (!ec && (successfully_parsed == stopped_at_position)) {
-            std::fill(buffer_.begin(), buffer_.begin() + successfully_parsed, 0);
-            setp(&buffer_[0], &buffer_[0] + buffer_.size());
-            setg(&buffer_[0], &buffer_[0], &buffer_[0]);
-        } else if (ec == msgpack::errc::unexpected_end_of_input) {
-            auto unparsed = stopped_at_position - successfully_parsed;
-            std::copy(buffer_.begin() + successfully_parsed,
-                      buffer_.begin() + stopped_at_position, buffer_.begin());
-            std::fill(buffer_.begin() + unparsed, buffer_.end(), 0);
-            setp(&buffer_[0], &buffer_[buffer_.size()]);
-            setg(&buffer_[0], &buffer_[0], &buffer_[0]);
-            pbump(unparsed);
+                                               successfully_parsed,
+                                               stopped_at_position,
+                                               unpack_error);
+        if (unpack_error &&
+                unpack_error != msgpack::errc::unexpected_end_of_input) {
+            error = unpack_error;
+            return 0;
         }
 
-        ec = error;
+        if (successfully_parsed == 0) return 0;
+
+        auto unparsed_remain = stopped_at_position - successfully_parsed;
+
+        if (unpack_error) {
+            auto begin = std::begin(buffer_);
+            std::copy(begin + successfully_parsed,
+                      begin + stopped_at_position,
+                      begin);
+        }
+
+        auto begin = unpack_error ?
+                     std::begin(buffer_) + unparsed_remain : std::begin(buffer_);
+        auto end = unpack_error ?
+                   std::end(buffer_) : std::begin(buffer_) + successfully_parsed;
+
+        std::fill(begin, end , 0);
+        setp(&buffer_[0], &buffer_[buffer_.size()]);
+        setg(&buffer_[0], &buffer_[0], &buffer_[0]);
+
+        if (unparsed_remain) pbump(unparsed_remain);
+
         std::move(result.begin(), result.end(), std::back_inserter(packages));
         return result.size();
     }
 
-    std::size_t produce_packets(const std::vector<package> packages,
+    std::size_t produce_msgpack(const std::vector<package> packages,
                                 std::error_code error) {
-        return 0;
+        throw std::runtime_error("not implemented");
     }
 
 protected:

@@ -89,7 +89,7 @@ public:
 
         std::vector<uint8_t> out;
         for (auto package : packages) package.pack(out);
-        std::move(std::begin(out), std::end(out), std::back_inserter(buffer_));
+        xsputn(&out[0], out.size());
         return out.size();
     }
 

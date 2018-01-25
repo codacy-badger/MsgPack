@@ -1,4 +1,5 @@
 #include <catch.hpp>
+#include <iostream>
 #include "msgpack/msgpack.hpp"
 
 using namespace tarigo;
@@ -80,4 +81,5 @@ TEST_CASE("Produce string", "[streambuf]") {
     msgpack::streambuf streambuf;
     std::basic_ostream<uint8_t> out(&streambuf);
     REQUIRE(streambuf.produce_msgpack(packages, error) == 7);
+    REQUIRE(streambuf.size() == 7);
 }

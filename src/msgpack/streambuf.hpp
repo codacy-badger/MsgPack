@@ -93,6 +93,15 @@ public:
         return out.size();
     }
 
+    std::size_t produce_msgpack(package &package,
+                                std::error_code &error) {
+
+        std::vector<uint8_t> out;
+        package.pack(out);
+        xsputn(&out[0], out.size());
+        return out.size();
+    }
+
 protected:
     const size_t buffer_delta = 512;
 

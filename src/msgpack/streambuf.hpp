@@ -166,7 +166,7 @@ protected:
         setp(&buffer_[0] + pnext, &buffer_[0] + pend);
     }
 
-private:
+protected:
     std::size_t max_size_;
     std::vector<char_type> buffer_;
 };

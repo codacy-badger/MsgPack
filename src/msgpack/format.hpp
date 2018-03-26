@@ -1,59 +1,48 @@
 #ifndef TARIGO_MSGPACK_FORMAT_HPP
 #define TARIGO_MSGPACK_FORMAT_HPP
 
-#ifdef TRUE
-#undef TRUE
-#endif
-
-#ifdef FALSE
-#undef FALSE
-#endif
-
-namespace tarigo {
-namespace msgpack {
+namespace tarigo::msgpack {
 
 // MessagePack formats.
 enum class format : unsigned char {
-    UNDEFINED,          // Not defined.
-    POSITIVE_FIXINT,    // 0xxxxxxx | 0x00 - 0x7f
-    FIXMAP,             // 1000xxxx | 0x80 - 0x8f
-    FIXARRAY,           // 1001xxxx	| 0x90 - 0x9f
-    FIXSTR,             // 101xxxxx | 0xa0 - 0xbf
-    NIL,                // 0xc0
-    FALSE,              // 0xc2
-    TRUE,               // 0xc3
-    BIN8,               // 0xc4
-    BIN16,              // 0xc5
-    BIN32,              // 0xc6
-    EXT8,               // 0xc7
-    EXT16,              // 0xc8
-    EXT32,              // 0xc9
-    FLOAT32,            // 0xca
-    FLOAT64,            // 0xcb
-    UINT8,              // 0xcc
-    UINT16,             // 0xcd
-    UINT32,             // 0xce
-    UINT64,             // 0xcf
-    INT8,               // 0xd0
-    INT16,              // 0xd1
-    INT32,              // 0xd2
-    INT64,              // 0xd3
-    FIXEXT1,            // 0xd4
-    FIXEXT2,            // 0xd5
-    FIXEXT4,            // 0xd6
-    FIXEXT8,            // 0xd7
-    FIXEXT16,           // 0xd8
-    STR8,               // 0xd9
-    STR16,              // 0xda
-    STR32,              // 0xdb
-    ARRAY16,            // 0xdc
-    ARRAY32,            // 0xdd
-    MAP16,              // 0xde
-    MAP32,              // 0xdf
-    NEGATIVE_FIXINT     // 0xe0 - 0xff
+    positive_fixint,    // 0xxxxxxx | 0x00 - 0x7f
+    fixmap,             // 1000xxxx | 0x80 - 0x8f
+    fixarray,           // 1001xxxx	| 0x90 - 0x9f
+    fixstr,             // 101xxxxx | 0xa0 - 0xbf
+    null,               // 0xc0
+    boolean_false,      // 0xc2
+    boolean_true,       // 0xc3
+    bin8,               // 0xc4
+    bin16,              // 0xc5
+    bin32,              // 0xc6
+    ext8,               // 0xc7
+    ext16,              // 0xc8
+    ext32,              // 0xc9
+    float32,            // 0xca
+    float64,            // 0xcb
+    uint8,              // 0xcc
+    uint16,             // 0xcd
+    uint32,             // 0xce
+    uint64,             // 0xcf
+    int8,               // 0xd0
+    int16,              // 0xd1
+    int32,              // 0xd2
+    int64,              // 0xd3
+    fixext1,            // 0xd4
+    fixext2,            // 0xd5
+    fixext4,            // 0xd6
+    fixext8,            // 0xd7
+    fixext16,           // 0xd8
+    str8,               // 0xd9
+    str16,              // 0xda
+    str32,              // 0xdb
+    array16,            // 0xdc
+    array32,            // 0xdd
+    map16,              // 0xde
+    map32,              // 0xdf
+    negative_fixint     // 0xe0 - 0xff
 };
 
-} //namespace msgpack
-} //namespace tarigo
+}
 
 #endif //TARIGO_MSGPACK_FORMAT_HPP

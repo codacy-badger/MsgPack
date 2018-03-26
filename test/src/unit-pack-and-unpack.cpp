@@ -16,8 +16,8 @@ TEST_CASE("Check nil value", "[pack/unpack]") {
     msgpack::package nil, nil_explicit(nullptr);
 
     REQUIRE(nil == nil_explicit);
-    REQUIRE(nil.type() == msgpack::type::NIL);
-    REQUIRE(nil.format() == msgpack::format::NIL);
+    REQUIRE(nil.type() == msgpack::type::null);
+    REQUIRE(nil.format() == msgpack::format::null);
 
     vector<uint8_t> raw_msgpack;
     nil.pack(raw_msgpack);
@@ -34,11 +34,11 @@ TEST_CASE("Check nil value", "[pack/unpack]") {
 TEST_CASE("Check boolean values", "[pack/unpack]") {
     msgpack::package f(false), t(true);
 
-    REQUIRE(f.type() == msgpack::type::BOOLEAN);
+    REQUIRE(f.type() == msgpack::type::boolean);
     REQUIRE(f.type() == t.type());
 
-    REQUIRE(f.format() == msgpack::format::FALSE);
-    REQUIRE(t.format() == msgpack::format::TRUE);
+    REQUIRE(f.format() == msgpack::format::boolean_false);
+    REQUIRE(t.format() == msgpack::format::boolean_true);
 
     REQUIRE(f != t);
     REQUIRE(t > f);
@@ -78,8 +78,8 @@ TEST_CASE("Check fixed string", "[pack/unpack]") {
     for (auto entry : sample) {
         msgpack::package package(entry.first);
 
-        REQUIRE(package.type() == msgpack::type::RAW_STRING);
-        REQUIRE(package.format() == msgpack::format::FIXSTR);
+        REQUIRE(package.type() == msgpack::type::string);
+        REQUIRE(package.format() == msgpack::format::fixstr);
 
         vector<uint8_t > raw_msgpack;
         package.pack(raw_msgpack);
@@ -99,9 +99,9 @@ TEST_CASE("Check fixed string", "[pack/unpack]") {
 
     for(auto entry : one_byte_more_than_fixstr) {
         msgpack::package package(entry.first);
-        REQUIRE(package.type() == msgpack::type::RAW_STRING);
-        REQUIRE(package.format() != msgpack::format::FIXSTR);
-        REQUIRE(package.format() == msgpack::format::STR8);
+        REQUIRE(package.type() == msgpack::type::string);
+        REQUIRE(package.format() != msgpack::format::fixstr);
+        REQUIRE(package.format() == msgpack::format::str8);
     }
 }
 
@@ -123,8 +123,8 @@ TEST_CASE("Check fixed map", "[pack/unpack]") {
 
     error_code ec;
     auto unpacked = msgpack::unpacker::unpack(expected, ec);
-    REQUIRE(unpacked.type() == msgpack::type::MAP);
-    REQUIRE(unpacked.format() == msgpack::format::FIXMAP);
+    REQUIRE(unpacked.type() == msgpack::type::map);
+    REQUIRE(unpacked.format() == msgpack::format::fixmap);
 
     REQUIRE(package == unpacked);
 }

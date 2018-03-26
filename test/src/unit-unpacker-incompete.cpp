@@ -12,8 +12,8 @@ TEST_CASE("Incomplete fixstring", "[unpacker]") {
     auto pkg = unpacker::unpack(buf, ec);
     REQUIRE(ec);
     REQUIRE(ec == errc::unexpected_end_of_input);
-    REQUIRE(pkg.type() == type::NIL);
-    REQUIRE(pkg.format() == format::NIL);
+    REQUIRE(pkg.type() == type::null);
+    REQUIRE(pkg.format() == format::null);
 }
 
 TEST_CASE("Incomplete fixstring - format byte only", "[unpacker]") {
@@ -23,8 +23,8 @@ TEST_CASE("Incomplete fixstring - format byte only", "[unpacker]") {
     auto pkg = unpacker::unpack(buf, ec);
     REQUIRE(ec);
     REQUIRE(ec == errc::unexpected_end_of_input);
-    REQUIRE(pkg.type() == type::NIL);
-    REQUIRE(pkg.format() == format::NIL);
+    REQUIRE(pkg.type() == type::null);
+    REQUIRE(pkg.format() == format::null);
 }
 
 
@@ -38,8 +38,8 @@ TEST_CASE("Incomplete str 8 - format byte only", "[unpacker]") {
     auto pkg = unpacker::unpack(buf, ec);
     REQUIRE(ec);
     REQUIRE(ec == errc::unexpected_end_of_input);
-    REQUIRE(pkg.type() == type::NIL);
-    REQUIRE(pkg.format() == format::NIL);
+    REQUIRE(pkg.type() == type::null);
+    REQUIRE(pkg.format() == format::null);
 }
 
 TEST_CASE("Incomplete str 8", "[unpacker]") {
@@ -48,6 +48,6 @@ TEST_CASE("Incomplete str 8", "[unpacker]") {
     auto pkg = unpacker::unpack(buf, ec);
     REQUIRE(ec);
     REQUIRE(ec == errc::unexpected_end_of_input);
-    REQUIRE(pkg.type() == type::NIL);
-    REQUIRE(pkg.format() == format::NIL);
+    REQUIRE(pkg.type() == type::null);
+    REQUIRE(pkg.format() == format::null);
 }

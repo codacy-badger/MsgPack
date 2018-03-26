@@ -12,37 +12,37 @@ namespace msgpack {
 // -----------------------------------------------------------------------------
 // Nil.
 // -----------------------------------------------------------------------------
-class value_nil final : public value_base<type::NIL, nil_struct> {
+class value_nil final : public value_base<type::null, nil_struct> {
 public:
     explicit value_nil() : value_base({}) {}
-    enum format format() const override { return format::NIL; }
+    enum format format() const override { return format::null; }
 };
 
 // -----------------------------------------------------------------------------
 // Boolean.
 // -----------------------------------------------------------------------------
-class value_boolean final : public value_base<type::BOOLEAN, bool> {
+class value_boolean final : public value_base<type::boolean, bool> {
 public:
     explicit value_boolean(bool value) : value_base(value) {}
     enum format format() const override {
-        return value_ ? format::TRUE : format::FALSE;
+        return value_ ? format::boolean_true : format::boolean_false;
     }
 };
 
 // -----------------------------------------------------------------------------
 // String.
 // -----------------------------------------------------------------------------
-class value_string final : public value_base<type::RAW_STRING, std::string> {
+class value_string final : public value_base<type::string, std::string> {
 public:
     explicit value_string(const std::string &value) : value_base(value) {}
     explicit value_string(std::string &&value) : value_base(std::move(value)) {}
 
     enum format format() const override {
         const size_t len = value_.size();
-        if (len <= 0x1f) return format::FIXSTR;
-        if (len <= 0xff) return format::STR8;
-        if (len <= 0xffff) return format::STR16;
-        return format::STR32;
+        if (len <= 0x1f) return format::fixstr;
+        if (len <= 0xff) return format::str8;
+        if (len <= 0xffff) return format::str16;
+        return format::str32;
     }
 
     const std::string &string_value() const override { return value_; }
@@ -64,8 +64,7 @@ protected:
     bool equals(const value * other) const override {
         switch( other->type() )
         {
-            case type::INTEGER:
-            case type::FLOAT:
+            case type::number:
             {
                 return double_value() == other->double_value();
             } break;
@@ -80,8 +79,7 @@ protected:
     bool less(const value * other) const override {
         switch( other->type() )
         {
-            case type::INTEGER:
-            case type::FLOAT:
+            case type::number:
             {
                 return double_value() < other->double_value();
             } break;
@@ -137,42 +135,42 @@ template <typename T,
 format integer_format(T i) {
     if (i >= 0) {
         if (i < 128) {
-            return format::POSITIVE_FIXINT;
+            return format::positive_fixint;
         } else if (i <= std::numeric_limits<uint8_t>::max()) {
-            return format::UINT8;
+            return format::uint8;
         } else if (i <= std::numeric_limits<uint16_t>::max()) {
-            return format::UINT16;
+            return format::uint16;
         } else if (i <= std::numeric_limits<uint32_t>::max()) {
-            return format::UINT32;
+            return format::uint32;
         } else if (i <= std::numeric_limits<uint64_t>::max()) {
-            return format::UINT64;
+            return format::uint64;
         }
     } else {
         if (i >= -32) {
-            return format::NEGATIVE_FIXINT;
+            return format::negative_fixint;
         } else if (i >= std::numeric_limits<int8_t>::min() and
                    i <= std::numeric_limits<int8_t>::max()) {
-            return format::INT8;
+            return format::int8;
         } else if (i >= std::numeric_limits<int16_t>::min() and
                    i <= std::numeric_limits<int16_t>::max()) {
-            return format::INT16;
+            return format::int16;
         } else if (i >= std::numeric_limits<int32_t>::min() and
                    i <= std::numeric_limits<int32_t>::max()) {
-            return format::INT32;
+            return format::int32;
         } else if (i >= std::numeric_limits<int64_t>::min() and
                    i <= std::numeric_limits<int64_t>::max()) {
-            return format::INT64;
+            return format::int64;
         }
     }
 
-    return format::UNDEFINED;
+    //return format::UNDEFINED;
 }
 
 // -----------------------------------------------------------------------------
 // Integers.
 // -----------------------------------------------------------------------------
 
-class value_int8 final : public value_number<type::INTEGER, int8_t> {
+class value_int8 final : public value_number<type::number, int8_t> {
 public:
     explicit value_int8(int8_t value) : value_number(value) {}
 
@@ -181,7 +179,7 @@ public:
     }
 };
 
-class value_int16 final : public value_number<type::INTEGER, int16_t> {
+class value_int16 final : public value_number<type::number, int16_t> {
 public:
     explicit value_int16(uint16_t value) : value_number(value) {}
 
@@ -190,7 +188,7 @@ public:
     }
 };
 
-class value_int32 final : public value_number<type::INTEGER, int32_t> {
+class value_int32 final : public value_number<type::number, int32_t> {
 public:
     explicit value_int32(int32_t value) : value_number(value) {}
 
@@ -199,7 +197,7 @@ public:
     }
 };
 
-class value_int64 final : public value_number<type::INTEGER, int64_t> {
+class value_int64 final : public value_number<type::number, int64_t> {
 public:
     explicit value_int64(int64_t value) : value_number(value) {}
 
@@ -209,7 +207,7 @@ public:
 };
 
 
-class value_uint8 final : public value_number<type::INTEGER, uint8_t> {
+class value_uint8 final : public value_number<type::number, uint8_t> {
 public:
     explicit value_uint8(uint8_t value) : value_number(value) {}
 
@@ -218,7 +216,7 @@ public:
     }
 };
 
-class value_uint16 final : public value_number<type::INTEGER, uint16_t> {
+class value_uint16 final : public value_number<type::number, uint16_t> {
 public:
     explicit value_uint16(uint16_t value) : value_number(value) {}
 
@@ -227,7 +225,7 @@ public:
     }
 };
 
-class value_uint32 final : public value_number<type::INTEGER, uint32_t> {
+class value_uint32 final : public value_number<type::number, uint32_t> {
 public:
     explicit value_uint32(uint32_t value) : value_number(value) {}
 
@@ -236,7 +234,7 @@ public:
     }
 };
 
-class value_uint64 final : public value_number<type::INTEGER, uint64_t> {
+class value_uint64 final : public value_number<type::number, uint64_t> {
 public:
     explicit value_uint64(uint64_t value) : value_number(value) {}
 
@@ -248,22 +246,22 @@ public:
 // -----------------------------------------------------------------------------
 // Floats.
 // -----------------------------------------------------------------------------
-class value_float final : public value_number<type::FLOAT, float> {
+class value_float final : public value_number<type::number, float> {
 public:
     explicit value_float(float value) : value_number(value) {}
-    enum format format() const override { return format::FLOAT32; }
+    enum format format() const override { return format::float32; }
 };
 
-class value_double final : public value_number<type::FLOAT, double> {
+class value_double final : public value_number<type::number, double> {
 public:
     explicit value_double(double value) : value_number(value) {}
-    enum format format() const override { return format::FLOAT64; }
+    enum format format() const override { return format::float64; }
 };
 
 // -----------------------------------------------------------------------------
 // Binary.
 // -----------------------------------------------------------------------------
-class value_binary final : public value_base<type::RAW_BINARY,package::binary> {
+class value_binary final : public value_base<type::binary,package::binary> {
     const package::binary &binary_items() const override { return value_; }
 public:
     explicit value_binary(const package::binary &value) : value_base(value) {}
@@ -271,16 +269,16 @@ public:
 
     enum format format() const override {
         const size_t len = value_.size();
-        if(len <= 0xff) return format::BIN8;
-        if (len <= 0xffff) return format::BIN16;
-        return format::BIN32;
+        if(len <= 0xff) return format::bin8;
+        if (len <= 0xffff) return format::bin16;
+        return format::bin32;
     }
 };
 
 // -----------------------------------------------------------------------------
 // Array.
 // -----------------------------------------------------------------------------
-class value_array final : public value_base<type::ARRAY, package::array> {
+class value_array final : public value_base<type::array, package::array> {
 public:
     explicit value_array(const package::array &values) : value_base(values) {}
     explicit value_array(package::array &&values) : value_base(move(values)) {}
@@ -288,9 +286,9 @@ public:
 public:
     enum format format() const override {
         const size_t len = value_.size();
-        if (len <= 15) return format::FIXARRAY;
-        if (len <= 0xffff) return format::ARRAY16;
-        return format ::ARRAY32;
+        if (len <= 15) return format::fixarray;
+        if (len <= 0xffff) return format::array16;
+        return format::array32;
     }
 
     const package &operator[](size_t i) const override {
@@ -304,7 +302,7 @@ public:
 // -----------------------------------------------------------------------------
 // Map.
 // -----------------------------------------------------------------------------
-class value_map final : public value_base<type::MAP, package::map> {
+class value_map final : public value_base<type::map, package::map> {
 public:
     explicit value_map(const package::map &value) : value_base(value) {}
     explicit value_map(package::map &&value)   : value_base(move(value)) {}
@@ -312,9 +310,9 @@ public:
 public:
     enum format format() const override {
         const size_t len = value_.size();
-        if(len <= 15) return format::FIXMAP;
-        if(len <= 0xffff) return format::MAP16;
-        return format::MAP32;
+        if(len <= 15) return format::fixmap;
+        if(len <= 0xffff) return format::map16;
+        return format::map32;
     }
 
     const package::map &map_items() const override { return value_; }

@@ -85,15 +85,15 @@ public:
     inline enum type type() const;
     inline enum format format() const;
 
-    bool is_type_integer()      const { return type() == type::INTEGER; }
-    bool is_type_nil()          const { return type() == type::NIL; }
-    bool is_type_boolean()      const { return type() == type::BOOLEAN; };
-    bool is_type_float()        const { return type() == type::FLOAT; }
-    bool is_type_string()       const { return type() == type::RAW_STRING; }
-    bool is_type_binary()       const { return type() == type::RAW_BINARY; }
-    bool is_type_array()        const { return type() == type::ARRAY; }
-    bool is_type_map()          const { return type() == type::MAP; }
-    bool is_type_extension()    const { return type() == type::EXTENSION; }
+    bool is_type_integer()      const { return type() == type::number; }
+    bool is_type_nil()          const { return type() == type::null; }
+    bool is_type_boolean()      const { return type() == type::boolean; };
+    bool is_type_float()        const { return type() == type::number; }
+    bool is_type_string()       const { return type() == type::string; }
+    bool is_type_binary()       const { return type() == type::binary; }
+    bool is_type_array()        const { return type() == type::array; }
+    bool is_type_map()          const { return type() == type::map; }
+    bool is_type_extension()    const { return type() == type::extension; }
 
     // -------------------------------------------------------------------------
     // Value getters.

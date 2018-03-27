@@ -7,9 +7,7 @@
 #include "msgpack/error.hpp"
 #include "msgpack/packer.hpp"
 
-namespace tarigo {
-namespace msgpack {
-namespace unpacker {
+namespace tarigo::msgpack::unpacker {
 
 using std::vector;
 
@@ -349,8 +347,6 @@ inline std::vector<package> unpack_sequence (std::vector<uint8_t> const& in,
 }
 
 
-} //namespace unpacker
-} //namespace msgpack
-} //namespace tarigo
+}
 
 #endif //TARIGO_MSGPACK_UNPACKER_IPP

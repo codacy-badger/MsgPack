@@ -9,8 +9,7 @@
 #include "msgpack/format.hpp"
 #include "msgpack/type.hpp"
 
-namespace tarigo {
-namespace msgpack {
+namespace tarigo::msgpack {
 
 class value;
 
@@ -85,15 +84,14 @@ public:
     inline enum type type() const;
     inline enum format format() const;
 
-    bool is_type_integer()      const { return type() == type::number; }
-    bool is_type_nil()          const { return type() == type::null; }
-    bool is_type_boolean()      const { return type() == type::boolean; };
-    bool is_type_float()        const { return type() == type::number; }
-    bool is_type_string()       const { return type() == type::string; }
-    bool is_type_binary()       const { return type() == type::binary; }
-    bool is_type_array()        const { return type() == type::array; }
-    bool is_type_map()          const { return type() == type::map; }
-    bool is_type_extension()    const { return type() == type::extension; }
+    bool is_type_null() const { return type() == type::null; }
+    bool is_type_boolean() const { return type() == type::boolean; };
+    bool is_type_number() const { return type() == type::number; }
+    bool is_type_string() const { return type() == type::string; }
+    bool is_type_binary() const { return type() == type::binary; }
+    bool is_type_array() const { return type() == type::array; }
+    bool is_type_map() const { return type() == type::map; }
+    bool is_type_extension() const { return type() == type::extension; }
 
     // -------------------------------------------------------------------------
     // Value getters.
@@ -161,7 +159,6 @@ private:
     std::shared_ptr<value> ptr_;
 };
 
-} //namespace msgpack
 } //namespace tarigo
 
 #include <msgpack/impl/package.ipp>

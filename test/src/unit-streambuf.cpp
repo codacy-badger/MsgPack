@@ -43,7 +43,7 @@ TEST_CASE("Consume incomplete array sequentially", "[streambuf]") {
     REQUIRE(consumed == 1);
     REQUIRE(!error);
     REQUIRE(packages[0].is_type_array());
-    REQUIRE(packages[0].array_items()[0].is_type_integer());
+    REQUIRE(packages[0].array_items()[0].is_type_number());
     REQUIRE(packages[0].array_items()[0].int32_value() == 3);
 }
 
@@ -71,7 +71,7 @@ TEST_CASE("Consume complete string and incomplete buffer sequentially", "[stream
     REQUIRE(consumed == 1);
     REQUIRE(!error);
     REQUIRE(packages[1].is_type_array());
-    REQUIRE(packages[1].array_items()[0].is_type_integer());
+    REQUIRE(packages[1].array_items()[0].is_type_number());
     REQUIRE(packages[1].array_items()[0].int32_value() == 3);
 }
 
